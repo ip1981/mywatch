@@ -83,7 +83,7 @@ privilege.
 To be able to kill queries a procedure named `mywatch_kill` must exist
 in the `mysql` database.  MyWatch invokes `CALL mysql.mywatch_kill(id)`
 for killing queries.  It's up to you how to implement this routine, for a
-safe example see [sql/mywatch_kill.sql](sql/mywatch_kill.sql). Of cource,
+safe example see [sql/mywatch_kill.sql](sql/mywatch_kill.sql). Of course,
 MyWatch should be granted to execute this procedure.  If this procedure
 does not exist, MyWatch will not show this possibility in user interface,
 API will work, but result in Internal Server Error (HTTP 500). There is no
