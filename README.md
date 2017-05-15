@@ -2,7 +2,7 @@ My Watch
 ========
 
 Web application for viewing and killing MySQL queries on multiple
-servers. Designed to work behind [Sproxy](https://github.com/zalora/sproxy).
+servers. Designed to work behind [Sproxy](http://hackage.haskell.org/package/sproxy2).
 
 
 Requirements
