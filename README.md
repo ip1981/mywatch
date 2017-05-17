@@ -17,7 +17,7 @@ to fetch and build all pre-requisites automatically.
 Installation
 ============
 
-    $ git clone https://github.com/zalora/mywatch.git
+    $ git clone https://github.com/ip1981/mywatch.git
     $ cd mywatch
     $ cabal install
 
