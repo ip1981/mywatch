@@ -48,7 +48,7 @@ server socketSpec mysqlConnInfo dataDir =
       runSettingsSocket defaultSettings sock =<< app mysql dataDir)
 
 getGroup :: ConnectInfo -> Text
-getGroup ci = decodeUtf8 . getName . fromJust . find isGroup . connectOptions $ ci
+getGroup = decodeUtf8 . getName . fromJust . find isGroup . connectOptions
   where
     isGroup (ReadDefaultGroup _) = True
     isGroup _ = False
