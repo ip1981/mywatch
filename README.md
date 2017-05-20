@@ -69,8 +69,9 @@ Sproxy Configuration
 ====================
 
 * To access the service allow `GET` for `/`, `/static/%` and `/serverlist.json`.
-* To see processes on a particular MySQL server allow `GET` and `HEAD` for
-  `/server/:server/processlist.json`.
+* To see processes on a particular MySQL server allow `GET` and (optional)
+  `HEAD` for `/server/:server/processlist.json`. The latter is only required with
+  Sproxy2 before version 1.95.0
 * To kill processes allow `DELETE` for `/server/:server/process/%`
 
 

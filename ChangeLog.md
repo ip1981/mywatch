@@ -1,3 +1,12 @@
+0.3.0
+=====
+
+  * Support Sproxy's end-point `/.sproxy/access` to find servers, available
+    to the current user, in one single HTTP request. This requires
+    Sproxy2 >= 1.95.0. Fallback to old multiple-request way if that
+    end-point returns error.
+
+
 0.2.1
 =====
 
