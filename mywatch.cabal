@@ -14,7 +14,7 @@ build-type: Simple
 extra-source-files: README.md ChangeLog.md
 cabal-version: >= 1.20
 data-files:
-  index.html
+  app.html
   static/external/bootstrap/css/*.min.css
   static/external/bootstrap/js/*.min.js
   static/external/jquery-2.2.4.min.js
@@ -45,6 +45,7 @@ executable mywatch
       , data-default-class
       , docopt                   >= 0.7
       , fast-logger
+      , filepath
       , http-types               >= 0.9
       , interpolatedstring-perl6 >= 1.0
       , MissingH

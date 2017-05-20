@@ -24,6 +24,7 @@ import Network.Wai.Middleware.RequestLogger (Destination(Handle),
   mkRequestLogger, RequestLoggerSettings(destination, outputFormat),
   OutputFormat(CustomOutputFormat))
 import Network.Wai.Middleware.Static (addBase, hasPrefix, staticPolicy, (>->))
+import System.FilePath.Posix ((</>))
 import System.IO (stderr)
 import Web.Scotty (ScottyM, ActionM, middleware, json, file, addroute, get,
   delete, status, text, param, scottyApp)
@@ -47,7 +48,7 @@ myProcess ps logger dataDir = do
   middleware $ Gzip.gzip Gzip.def {Gzip.gzipFiles = Gzip.GzipCompress}
 
   middleware $ staticPolicy (hasPrefix "static" >-> addBase dataDir)
-  get "/" $ file (dataDir ++ "/" ++ "index.html")
+  get "/" $ file (dataDir </> "app.html")
 
   get "/serverlist.json" $ json (sort $ HM.keys ps)
   get "/server/:server/processlist.json" $ apiGetProcessList ps
