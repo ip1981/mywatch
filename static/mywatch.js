@@ -9,7 +9,7 @@ $(function() {
 
   var cankill;
   var interval;
-  var server;
+  var selected;
 
   var plCols = plHeader.children().map(function() {
     return $(this).text();
@@ -28,10 +28,10 @@ $(function() {
   function switchServer() {
     cankill = undefined;
     clearInterval(interval);
-    if ('' !== server) {
-      document.title = server + ' — ' + 'MyWatch';
+    if ('' !== selected) {
+      document.title = selected + ' — ' + 'MyWatch';
       serverList.find('.active').removeClass('active');
-      var s = $('a[href="#' + server + '"]');
+      var s = $('a[href="#' + selected + '"]');
       if (s) {
         s.parent().addClass('active');
         getProcessList();
@@ -43,14 +43,14 @@ $(function() {
   }
 
   function onHash() {
-    server = location.hash.substring(1);
+    selected = location.hash.substring(1);
     switchServer();
   };
   window.onhashchange = onHash;
 
   function kill(id) {
     $.ajax({
-      url: 'server/' + server + '/process/' + id,
+      url: 'server/' + selected + '/process/' + id,
       method: 'DELETE',
       success: function() {
         $('#' + id).fadeOut(300, function() {
@@ -104,7 +104,7 @@ $(function() {
   function getProcessList() {
     function get() {
       $.ajax({
-        url: 'server/' + server + '/processlist.json',
+        url: 'server/' + selected + '/processlist.json',
         method: 'GET',
         error: commonError,
         success: showProcessList
@@ -112,7 +112,7 @@ $(function() {
     }
     if (typeof cankill === 'undefined') {
       $.ajax({
-        url: 'server/' + server + '/process/0',
+        url: 'server/' + selected + '/process/0',
         method: 'DELETE',
         complete: function(jqXHR) {
           cankill = (200 === jqXHR.status);
@@ -124,38 +124,68 @@ $(function() {
     }
   };
 
+  function showAvailable(available) {
+    available.sort().forEach(function(s) {
+      serverList.append('<li><a href="#' + s + '">' + s + '</a></li>');
+    });
+    serverList.find('a').on('click', function() {
+      if ($(this).text() === selected) {
+        getProcessList();
+      }
+    });
+    info.hide();
+    onHash();
+  };
+
+  function getAvailableFallback(servers) {
+    var total = servers.length;
+    var available = [];
+    var checked = 0;
+    $.each(servers, function(i, s) {
+      $.ajax({
+        url: 'server/' + s + '/processlist.json',
+        method: 'HEAD',
+        success: function() {
+          available.push(s);
+        },
+        complete: function() {
+          checked++;
+          if (checked === total) {
+            showAvailable(available);
+          }
+        }
+      });
+    });
+  };
+
+  function getAvailable(servers) {
+    var total = servers.length;
+    var available = [];
+    var data = {};
+    servers.forEach(function(tag) {
+      data[tag] = {
+        method: 'GET',
+        path: '/server/' + tag + '/processlist.json'
+      };
+    });
+
+    $.ajax({
+      url: '.sproxy/access',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      error: function() {
+        getAvailableFallback(servers)
+      },
+      success: showAvailable
+    });
+  };
+
   $.ajax({
     url: 'serverlist.json',
     method: 'GET',
     error: commonError,
-    success: function(servers) {
-      var total = servers.length;
-      var available = [];
-      var checked = 0;
-      $.each(servers, function(i, s) {
-        $.ajax({
-          url: 'server/' + s + '/processlist.json',
-          method: 'HEAD',
-          success: function() {
-            available.push(s);
-          },
-          complete: function() {
-            checked++;
-            if (checked === total) {
-              $.each(available.sort(), function(i, s) {
-                serverList.append('<li><a href="#' + s + '">' + s + '</a></li>')
-              });
-              serverList.find('a').on('click', function() {
-                if ($(this).text() === server) {
-                  getProcessList();
-                }
-              });
-              info.hide();
-              onHash();
-            }
-          }
-        });
-      });
-    }
+    success: getAvailable
   });
+
 });
