@@ -1,7 +1,7 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DeriveGeneric       #-}
+{-# LANGUAGE LambdaCase          #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Application (
@@ -13,23 +13,25 @@ import Prelude hiding (id)
 import Control.Monad.Trans (liftIO)
 import Data.Aeson (ToJSON)
 import Data.Default.Class (def)
+import qualified Data.HashMap.Lazy as HM
 import Data.List (sort)
 import Data.Pool (Pool, withResource)
 import Data.Text.Lazy (Text)
-import Database.MySQL.Simple (Connection, Only(..), query_, execute)
+import Database.MySQL.Simple (Connection, Only (..), execute, query_)
 import GHC.Generics (Generic)
-import Network.HTTP.Types (ok200, notFound404, notImplemented501, StdMethod(HEAD))
+import Network.HTTP.Types (StdMethod (HEAD), notFound404, notImplemented501,
+                           ok200)
 import Network.Wai (Application, Middleware)
-import Network.Wai.Middleware.RequestLogger (Destination(Handle),
-  mkRequestLogger, RequestLoggerSettings(destination, outputFormat),
-  OutputFormat(CustomOutputFormat))
+import qualified Network.Wai.Middleware.Gzip as Gzip
+import Network.Wai.Middleware.RequestLogger (Destination (Handle),
+                                             OutputFormat (CustomOutputFormat),
+                                             RequestLoggerSettings (destination, outputFormat),
+                                             mkRequestLogger)
 import Network.Wai.Middleware.Static (addBase, hasPrefix, staticPolicy, (>->))
 import System.FilePath.Posix ((</>))
 import System.IO (stderr)
-import Web.Scotty (ScottyM, ActionM, middleware, json, file, addroute, get,
-  delete, status, text, param, scottyApp)
-import qualified Data.HashMap.Lazy as HM
-import qualified Network.Wai.Middleware.Gzip as Gzip
+import Web.Scotty (ActionM, ScottyM, addroute, delete, file, get, json,
+                   middleware, param, scottyApp, status, text)
 
 import LogFormat (logFormat)
 

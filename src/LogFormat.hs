@@ -4,13 +4,13 @@ module LogFormat (
   logFormat
 ) where
 
+import qualified Data.ByteString.Char8 as BS
 import Data.Maybe (fromMaybe)
 import Data.Monoid ((<>))
-import Network.HTTP.Types (Status(statusCode))
-import Network.Wai (Request, httpVersion, requestHeaders, requestMethod,
-  rawPathInfo, requestHeaderReferer, requestHeaderUserAgent)
+import Network.HTTP.Types (Status (statusCode))
+import Network.Wai (Request, httpVersion, rawPathInfo, requestHeaderReferer,
+                    requestHeaderUserAgent, requestHeaders, requestMethod)
 import System.Log.FastLogger (LogStr, toLogStr)
-import qualified Data.ByteString.Char8 as BS
 
 -- Sligthly modified Combined Log Format.
 -- User ID extracted from the From header.

@@ -5,17 +5,17 @@ module Main (
 ) where
 
 import Data.ByteString.Char8 (pack)
+import qualified Data.ConfigFile as Cf
 import Data.Either.Utils (forceEither)
-import Data.Maybe (fromJust)
 import Data.List (isPrefixOf)
+import Data.Maybe (fromJust)
 import Data.Version (showVersion)
-import Database.MySQL.Base (ConnectInfo(..), defaultSSLInfo)
-import Database.MySQL.Base.Types (Option(ReadDefaultFile, ReadDefaultGroup))
-import Paths_mywatch (getDataDir, version) -- from cabal
+import Database.MySQL.Base (ConnectInfo (..), defaultSSLInfo)
+import Database.MySQL.Base.Types (Option (ReadDefaultFile, ReadDefaultGroup))
+import Paths_mywatch (getDataDir, version)
+import qualified System.Console.Docopt.NoTH as O
 import System.Environment (getArgs)
 import Text.InterpolatedString.Perl6 (qc)
-import qualified Data.ConfigFile as Cf
-import qualified System.Console.Docopt.NoTH as O
 
 import Server (server)
 
