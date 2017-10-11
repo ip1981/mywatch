@@ -35,6 +35,7 @@ executable mywatch
     main-is: Main.hs
     other-modules:
       Application
+      Application.Types.Process
       LogFormat
       Server
     build-depends:

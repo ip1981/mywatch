@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -11,7 +10,6 @@ module Application
 import Prelude hiding (id)
 
 import Control.Monad.Trans (liftIO)
-import Data.Aeson (ToJSON)
 import Data.Default.Class (def)
 import qualified Data.HashMap.Lazy as HM
 import Data.List (sort)
@@ -19,7 +17,6 @@ import Data.Pool (Pool, withResource)
 import Data.Text.Lazy (Text)
 import Database.MySQL.Simple
        (Connection, Only(..), execute, query_)
-import GHC.Generics (Generic)
 import Network.HTTP.Types
        (StdMethod(HEAD), notFound404, notImplemented501, ok200)
 import Network.Wai (Application, Middleware)
@@ -35,6 +32,7 @@ import Web.Scotty
        (ActionM, ScottyM, addroute, delete, file, get, json, middleware,
         param, scottyApp, status, text)
 
+import Application.Types.Process (Process(..))
 import LogFormat (logFormat)
 
 type Pools = HM.HashMap Text (Pool Connection)
@@ -58,19 +56,6 @@ myProcess ps logger dataDir = do
   -- Used by client to see which servers are really allowed by Sproxy
   addroute HEAD "/server/:server/processlist.json" $ apiCanProcessList ps
   delete "/server/:server/process/:id" $ apiKill ps
-
-data Process = Process
-  { id :: Int
-  , user :: Text
-  , host :: Text
-  , db :: Maybe Text
-  , command :: Text
-  , time :: Int
-  , state :: Maybe Text
-  , info :: Text
-  } deriving (Generic)
-
-instance ToJSON Process
 
 apiCanProcessList :: Pools -> ActionM ()
 apiCanProcessList ps = do
